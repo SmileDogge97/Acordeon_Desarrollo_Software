@@ -294,6 +294,7 @@ var rule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
 El proyecto de ejemplo usa viewModelScope para trabajar con corrutinas y por dicha razón es necesario modificar el dispatcher (dispatcher gestiona los hilos que usarán nuestras corrutinas) y para el testing se "truqueará". A continuación se define el propio dispatcher. 
     
+```Java
     @Before
     fun onBefore() {
         MockKAnnotations.init(this)
@@ -305,12 +306,15 @@ El proyecto de ejemplo usa viewModelScope para trabajar con corrutinas y por dic
     fun onAfter() {
         Dispatchers.resetMain()
     }
+```
 
 La función onBefore se le añadió el dispatcher y la función onAfter nos servirá para reiniciarlo al terminar los tests.
 
-Creando los tests.
+#### Creando los tests.
+
 Después de las configuraciones preeliminares se crea el primer test que devuelve un listado de citas y se asegura que el viewmodel asigne el primer elemento de la lista. En este caso para ViewModel se uso runTest en lugar de runBlocking, ya que se requiere para cada test del ViewModel.
     
+```Java
     @Test
     fun `when viewmodel is created at the first time, get all quotes and set the first value`() = runTest{
         //Given
@@ -323,9 +327,11 @@ Después de las configuraciones preeliminares se crea el primer test que devuelv
         //Then
         assert(quoteViewModel.quoteModel.value == quote.first())
     }
+```
 
 El siguiente test es sencillo y tiene un título muy descriptivo.
 
+```Java
   @Test
     fun `if randomQuoteUseCase return null keep the last value`() = runTest{
         //Given
@@ -339,6 +345,7 @@ El siguiente test es sencillo y tiene un título muy descriptivo.
         //Then
         assert(quoteViewModel.quoteModel.value == quote)
     }
+```
 
 Este último test es muy similar pero comienza con un valor por defecto a nuestro LiveData (quoteModel) comprueba si el caso de uso retorna null en vez de asignarlo mantiene el último valor.
 
