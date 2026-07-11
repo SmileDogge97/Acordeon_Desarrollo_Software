@@ -67,11 +67,12 @@ Un tests es como una función, pero que tiene una notación en la parte superior
 ##### @Before
 En este ejemplo con la Anotación @Before se inicializa la configuración inicial de la librería MockK antes de lanzar los test (la anotación @Before sirve para hacer las configuraciones iniciales antes de los test)
 
+```Java
 @Before
-
     fun onBefore() {
         MockKAnnotations.init(this)
     }
+```
 
 ### Mockear el repositorio
 #### @MockK
