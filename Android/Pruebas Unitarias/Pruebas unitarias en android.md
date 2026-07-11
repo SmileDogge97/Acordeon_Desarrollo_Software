@@ -65,7 +65,7 @@ En este caso se testeará el caso de uso y el resto se mockeará. En el ejemplo 
 Un tests es como una función, pero que tiene una notación en la parte superior. Con las etiquetas **@Before** y **@After** se pueden hacer configuraciones genéricas para la clase.
 
 ##### @Before
-En este ejemplo con la Anotación @Before se inicializa la configuración inicial de la librería MockK antes de lanzar los test (la anotación @Before sirve para hacer las configuraciones iniciales antes de los test)
+En este ejemplo con la Anotación @Before se inicializa la configuración inicial de la librería MockK antes de lanzar los test (la anotación @Before sirve para hacer las configuraciones iniciales antes de los test). Dicho método también se puede utilizar para inicializar objetos que hayamos creado en la clase test.
 
 ```Java
 @Before
@@ -130,9 +130,10 @@ En los ejemplos anteriores se utilizaron corrutinas, es por que eso que están u
 #### Given When Then
 
 Given-When-Then es un patrón que se suele utilizar para escribir los test. Se explica de la siguiente forma:
-- **Given:** Al mock se le da la respuesta que queremos que devuelva.
-- **When:** Llama al caso de uso
-- **Then:** Verifica que la función correcta del repositorio ha sido llamada.
+- **Given:** En el ejemplo al mock se le da la respuesta que queremos que devuelva. Pero también puede configurarse los valores que se desean probar en el método test.
+- **When:** En el ejemplo llama al caso de uso. En otros casos puede usarse esta sección para ejecutar el método que queremos probar.
+
+- **Then:** En el ejemplo verifica que la función correcta del repositorio ha sido llamada. Y en otros casos se puede utilizar para hacer la validación del resultado.
 
 A continuación viene el ejemplo del test 1 que se hizo en el proyecto:
 
