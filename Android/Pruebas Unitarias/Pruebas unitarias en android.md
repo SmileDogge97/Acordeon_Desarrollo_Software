@@ -1,4 +1,5 @@
-# ¿Que son los test?
+# Pruebas Unitarias Android
+## ¿Que son los test?
 Los test nos ayudar para validar el correcto funcionamiento del código que se encarga de hacer funcionar una aplicación móvil. Esto nos ayuda a controlar la parte compleja de la app y detectar que el nuevo código no haya dañado el código anterior.
 
 ## Beneficios:
@@ -65,7 +66,7 @@ En este caso se testeará el caso de uso y el resto se mockeará. En el ejemplo 
 Un tests es como una función, pero que tiene una notación en la parte superior. Con las etiquetas **@Before** y **@After** se pueden hacer configuraciones genéricas para la clase.
 
 ##### @Before
-En este ejemplo con la Anotación @Before se inicializa la configuración inicial de la librería MockK antes de lanzar los test (la anotación @Before sirve para hacer las configuraciones iniciales antes de los test). Dicho método también se puede utilizar para inicializar objetos que hayamos creado en la clase test.
+En este ejemplo con la Anotación @Before se inicializa la configuración inicial de la librería MockK antes de lanzar los test (la anotación @Before sirve para hacer las configuraciones iniciales antes de los test). Dicho método también se puede utilizar para inicializar objetos que hayamos creado y que se vayan a utilizar en los métodos @Test.
 
 ```Java
 @Before
@@ -287,7 +288,7 @@ El test es parecido al anterior, solo que esta vez se mockearon los dos casos de
 #### Reglas y dispatcher
 Las librerías arch.core nos permiten testear los LiveData y será necesario crear una regla.
 
-Las reglas permiten ser más flexible y evitar el código repetitivo. Además tiene el mismo comportamiento que el @Before, pero reutilizando el código. Por ejemplo crear una rebla que Inicializa los mocks: 
+Las reglas permiten ser más flexible y evitar el código repetitivo. Además tiene el mismo comportamiento que el @Before, pero reutilizando el código. Por ejemplo crear una regla que Inicializa los mocks: 
 
 ```Java
 @get:Rule
@@ -310,7 +311,7 @@ El proyecto de ejemplo usa viewModelScope para trabajar con corrutinas y por dic
     }
 ```
 
-La función onBefore se le añadió el dispatcher y la función onAfter nos servirá para reiniciarlo al terminar los tests.
+La función onBefore se le añadió el dispatcher y la función onAfter nos servirá para reiniciar el dispatcher al terminar los tests.
 
 #### Creando los tests.
 
@@ -351,3 +352,10 @@ El siguiente test es sencillo y tiene un título muy descriptivo.
 
 Este último test es muy similar pero comienza con un valor por defecto a nuestro LiveData (quoteModel) comprueba si el caso de uso retorna null en vez de asignarlo mantiene el último valor.
 
+## Resumen de como hacer las pruebas unitarias
+1. Selecciona la clase a la que se le hará la prueba Unitaria (pueden se clases que tengan la lógica de negocio, consulten a algún servicio/base de datos o que sirven de comunicación entre la vista y el repositorio(controller, caso de uso, view model)).
+2. Crea y configura el método onBefore con la anotación @Before, dentro instancia los objetos/mocks que vayas a crear para utilizarlos en los test.
+3. Crea y configura los objetos que vayas a requerir para hacer las pruebas(por ejemplo objetos que sean inyectados en las clases a probar) con sus mocks.
+    1. (Opcional) Crea las Rules 3.1
+    2. (Opcional) Crea el método onAfter con la anotación @After, dentro puedes reiniciar instancias/objetos (como el dispatcher para corrutinas al finalizar los tests) 3.2
+4. Piensa en lo que vayas a querer probar para cada método de la clase que necesites validar (por lo regular se validan métodos con lógica de negocio o que hagan algún tipo de consulta) y creales su método con la notación @Test(sigue la estructura Given-When-Then).
