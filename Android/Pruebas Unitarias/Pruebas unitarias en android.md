@@ -126,7 +126,7 @@ fun whenTheApiDoesntReturnAnythingThenGetValuesFromDatabase() = runBlocking{}
 fun `when the api doesnt return anything then get values from database`() = runBlocking{}
 ```
 
-En los ejemplos anteriores se utilizaron corrutinas, es por que eso que están usando **runBlocking{}** para lanzar la corrutina y ejecutar el test.
+En los ejemplos anteriores se utilizaron corrutinas, es por que eso que están usando **runBlocking{} para lanzar la corrutina y ejecutar el test.
 
 #### Given When Then
 
