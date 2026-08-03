@@ -70,9 +70,9 @@ Agregas está línea de código en el archivo AndroidManifest.xml para poner la 
 Con este código se puede validar si la pantalla está en orientación landscape o portrait.
 
 ```Kotlin
-val configuration = *LocalConfiguration*.current 
+val configuration = LocalConfiguration.current 
 
-val isLandscape = configuration.orientation == Configuration.*ORIENTATION_LANDSCAPE*
+val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 ```
 
 # **Palabras reservadas**
@@ -385,7 +385,7 @@ var *nombre de variable* = findViewById<EditText>(R.id.*Id del plaintext*)
 var *variable* = *identificador del plain text*.text.toString()
 //otra forma de sacar información del plain text:
 var nombre:EditText ?= null
-nombre?.*text*.*toString*()
+nombre?.*text*.toString()
 ```
 
 # **Como crear funciones a los botones**
@@ -500,11 +500,11 @@ fun observarSuscripciones() {
 
 ## **ViewModel**
 ```Kotlin
-private val _progressValue = *MutableStateFlow*(0)
+private val _progressValue = MutableStateFlow(0)
 val progressValue : StateFlow<Int> = _progressValue
 
 fun startProgress(){
-      *viewModelScope*.*launch* {
+      *viewModelScope*.launch {
           for (i in 1..100){
               _progressValue.value += 1
               Log.d("el conteo", "${_progressValue.value}")
@@ -1523,7 +1523,7 @@ var listener: NombreListener ?= null
 var nombre:EditText ?= null
 
 
-val nombreActual = nombre?.*text*.*toString*()
+val nombreActual = nombre?.*text*.toString()
 listener?.obtenerNombre(nombreActual)
 
 //video 259
@@ -1643,7 +1643,7 @@ binding.BTSalir.setOnClickListener{
               //set positive button
               builder.setNegativeButton(
                   "No"
-              ) { dialog, id **->**
+              ) { dialog, id ->
                   // User cancelled the dialog
               }
 
@@ -1887,14 +1887,14 @@ class LoginViewModel(
 
 Analicemos el código de corrutinas en la función **login**:
 
-- **viewModelScope** es un **CoroutineScope** predefinido que se incluye con las extensiones KTX de **ViewModel**. Ten en cuenta que todas las corrutinas deben ejecutarse en un alcance. **CoroutineScope** administra una o más corrutinas relacionadas.
-- **launch** es una función que crea una corrutina y despacha la ejecución de sus funciones al despachador correspondiente.
+- **viewModelScope** es un *CoroutineScope* predefinido que se incluye con las extensiones KTX de **ViewModel**. Ten en cuenta que todas las corrutinas deben ejecutarse en un alcance. *CoroutineScope* administra una o más corrutinas relacionadas.
+- *launch* es una función que crea una corrutina y despacha la ejecución de sus funciones al despachador correspondiente.
 - **Dispatchers.IO** indica que esta corrutina debe ejecutarse en un subproceso reservado para operaciones de E/S.
 
 Se ejecuta la función **login** de la siguiente manera:
 
 - La app llama a la función **login** desde la capa **View** del subproceso principal.
-- **launch** crea una nueva corrutina y se realiza la solicitud de red de forma independiente en un subproceso reservado para las operaciones de E/S.
+- *launch* crea una nueva corrutina y se realiza la solicitud de red de forma independiente en un subproceso reservado para las operaciones de E/S.
 - Mientras se ejecuta la corrutina, la función **login** continúa su ejecución y se muestra antes de que finalice la solicitud de red. Ten en cuenta que, para simplificar el proceso, se ignora por ahora la respuesta de la red.
 
 Dado que esta corrutina se inicia con **viewModelScope**, se ejecuta en el alcance de **ViewModel**. Si se destruye el **ViewModel** porque el usuario se aleja de la pantalla, se cancela automáticamente **viewModelScope**, y todas las corrutinas en ejecución también se cancelan.
@@ -1949,13 +1949,13 @@ Ten en cuenta que la corrutina todavía es necesaria, ya que **makeLoginRequest
 
 Este código tiene las siguientes diferencias con respecto al ejemplo de **login** anterior:
 
-- launch no toma un parámetro **Dispatchers.IO**. Cuando no pasas un **Dispatcher** a **launch**, cualquier corrutina iniciada desde **viewModelScope** se ejecuta en el subproceso principal.
+- launch no toma un parámetro **Dispatchers.IO**. Cuando no pasas un **Dispatcher** a *launch*, cualquier corrutina iniciada desde **viewModelScope** se ejecuta en el subproceso principal.
 - Ahora, el resultado de la solicitud de red se utiliza para mostrar la IU de éxito o falla.
 
 La función de acceso ahora se ejecuta de la siguiente manera:
 
 - La app llama a la función **login()** desde la capa **View** del subproceso principal.
-- **launch** crea una corrutina nueva en el subproceso principal y esta comienza a ejecutarse.
+- *launch* crea una corrutina nueva en el subproceso principal y esta comienza a ejecutarse.
 - Dentro de la corrutina, la llamada a **loginRepository.makeLoginRequest()** ahora *suspende* la ejecución de la corrutina hasta que el bloque **withContext** de **makeLoginRequest()** termina de ejecutarse.
 - Una vez que finaliza el bloque **withContext**, la corrutina de **login()** reanuda la ejecución *en el subproceso principal* con el resultado de la solicitud de red.
 
@@ -2002,11 +2002,11 @@ class PromotionsViewModel @Inject constructor(
 
 fun loadPromotions(location: Location) {
       _promotionsState.postValue(PromotionsViewState.Loading)
-      *viewModelScope*.*launch* {
+      *viewModelScope*.launch {
           val promotionsResult = *runCatching* {
               promotionsUseCase.execute(PromotionsUseCase.Params(location.*toPromotionLocation*()))
           }
-          promotionsResult.*onSuccess* { promotions **->**
+          promotionsResult.*onSuccess* { promotions ->
               val totalPromotions = promotions.promotions.*orEmpty*() + promotions.featured.*orEmpty*()
               if (totalPromotions.*isNotEmpty*()) {
                   _promotionsState.postValue(PromotionsViewState.Success(promotions))
@@ -2014,7 +2014,7 @@ fun loadPromotions(location: Location) {
                   _promotionsState.postValue(PromotionsViewState.PromotionsNotFound)
               }
           }.*onFailure* {
-              _promotionsState.postValue(PromotionsViewState.Error(**it**.*localizedMessage*.*orEmpty*()))
+              _promotionsState.postValue(PromotionsViewState.Error(it.*localizedMessage*.*orEmpty*()))
           }
       }
 }
@@ -2057,7 +2057,7 @@ class PromotionsDataSourceImpl @Inject constructor(
 # **StateFlow y Shared Flow**
 StateFlow y SharedFlow son [API de Flow] que permiten que los flujos emitan actualizaciones de estado y valores a varios consumidores de manera óptima.
 ## **StateFlow**
-[**StateFlow**](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-state-flow/ "https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-state-flow/") es un flujo observable contenedor de estados que emite los estados actual y nuevo actualizaciones a sus recopiladores. El valor del estado actual también se puede leer su [**value**](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-state-flow/value.html "https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-state-flow/value.html") propiedad. Para actualizar el estado y enviarlo al flujo, asigna un nuevo valor a la propiedad value de la clase [**MutableStateFlow**](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-mutable-state-flow/index.html "https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-mutable-state-flow/index.html").
+[**StateFlow**](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-state-flow/ "https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-state-flow/") es un flujo observable contenedor de estados que emite los estados actual y nuevo actualizaciones a sus recopiladores. El valor del estado actual también se puede leer su [**value**](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-state-flow/value.html "https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-state-flow/value.html") propiedad. Para actualizar el estado y enviarlo al flujo, asigna un nuevo valor a la propiedad value de la clase [*MutableStateFlow*](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-mutable-state-flow/index.html "https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-mutable-state-flow/index.html").
 
 En Android, StateFlow es una excelente opción para clases que necesitan mantener un estado observable que muta.
 
@@ -2096,7 +2096,7 @@ sealed class LatestNewsUiState {
 }
 ```
 
-La clase responsable de actualizar un **MutableStateFlow** es el productor, mientras que todas las clases que se recopilan de **StateFlow** son consumidores. A diferencia de un flujo *frío* compilado con el compilador de **flow**, un **StateFlow** es *caliente*; recopilar datos del flujo no activa ningún código de productor. Un objeto **StateFlow** siempre se encuentra activo y en la memoria, y se vuelve apto para la recolección de elementos no utilizados solo cuando no hay otras referencias a él en la raíz de otra recolección.
+La clase responsable de actualizar un *MutableStateFlow* es el productor, mientras que todas las clases que se recopilan de **StateFlow** son consumidores. A diferencia de un flujo *frío* compilado con el compilador de **flow**, un **StateFlow** es *caliente*; recopilar datos del flujo no activa ningún código de productor. Un objeto **StateFlow** siempre se encuentra activo y en la memoria, y se vuelve apto para la recolección de elementos no utilizados solo cuando no hay otras referencias a él en la raíz de otra recolección.
 
 Cuando un consumidor nuevo comienza a recopilarse desde el flujo, recibe el último estado del flujo y todos los estados posteriores. Puedes encontrar este comportamiento en otras clases observables, como [**LiveData**](https://developer.android.com/topic/libraries/architecture/livedata?hl=es-419 "https://developer.android.com/topic/libraries/architecture/livedata?hl=es-419").
 
